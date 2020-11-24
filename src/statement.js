@@ -1,17 +1,30 @@
 function statement(invoice, plays) {
   const statemantData = {
     customer: invoice.customer,
-    performances: invoice.performances
+    performances: invoice.performances.map(enrichPerformance)
   };
 
   return renderPlainText(statemantData, plays);
+
+  function enrichPerformance(performance) {
+    const result = {
+      ...performance,
+      play: playFor(performance)
+    };
+
+    return result;
+  }
+
+  function playFor(performance) {
+    return plays[performance.playID];
+  }
 }
 
 function renderPlainText(data, plays) {
   let result = `Statement for ${data.customer}\n`;
 
   for (let perf of data.performances) {
-    result += ` ${playFor(perf).name}: ${formatAsUSD(amountFor(perf))} (${perf.audience} seats)\n`;
+    result += ` ${perf.play.name}: ${formatAsUSD(amountFor(perf))} (${perf.audience} seats)\n`;
   }
 
   result += `Amount owed is ${formatAsUSD(totalAmount())}\n`;
@@ -21,7 +34,7 @@ function renderPlainText(data, plays) {
   function amountFor(performance) {
     let result = 0;
 
-    switch (playFor(performance).type) {
+    switch (performance.play.type) {
       case "tragedy":
         result = 40000;
         if (performance.audience > 30) {
@@ -35,14 +48,10 @@ function renderPlainText(data, plays) {
         result += 300 * performance.audience;
         break;
       default:
-        throw new Error(`unknown type: ${playFor(performance).type}`);
+        throw new Error(`unknown type: ${performance.play.type}`);
     }
 
     return result;
-  }
-
-  function playFor(performance) {
-    return plays[performance.playID];
   }
 
   function formatAsUSD(number) {
@@ -55,7 +64,7 @@ function renderPlainText(data, plays) {
   function volumeCreditsFor(performance) {
     let result = Math.max(performance.audience - 30, 0);
 
-    if ("comedy" === playFor(performance).type) result += Math.floor(performance.audience / 5);
+    if ("comedy" === performance.play.type) result += Math.floor(performance.audience / 5);
 
     return result;
   }
