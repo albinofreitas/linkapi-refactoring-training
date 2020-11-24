@@ -49,13 +49,11 @@ function statement(invoice, plays) {
   }
 
   function volumeCreditsFor(performance) {
-    let volumeCredits = 0;
-    // soma créditos por volume
-    volumeCredits += Math.max(performance.audience - 30, 0);
-    // soma um crédito extra para cada dez espectadores de comédia
-    if ("comedy" === playFor(performance).type) volumeCredits += Math.floor(performance.audience / 5);
+    let result = Math.max(performance.audience - 30, 0);
 
-    return volumeCredits;
+    if ("comedy" === playFor(performance).type) result += Math.floor(performance.audience / 5);
+
+    return result;
   }
 }
 
