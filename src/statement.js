@@ -5,6 +5,7 @@ function statement(invoice, plays) {
   };
 
   statemantData.totalAmount = totalAmount(statemantData);
+  statemantData.totalVolumeCredits = totalVolumeCredits(statemantData);
 
   return renderPlainText(statemantData, plays);
 
@@ -24,6 +25,16 @@ function statement(invoice, plays) {
     let result = Math.max(performance.audience - 30, 0);
 
     if ("comedy" === performance.play.type) result += Math.floor(performance.audience / 5);
+
+    return result;
+  }
+
+  function totalVolumeCredits(data) {
+    let result = 0;
+
+    for (let perf of data.performances) {
+      result += perf.volumeCredits;
+    }
 
     return result;
   }
@@ -74,7 +85,7 @@ function renderPlainText(data, plays) {
   }
 
   result += `Amount owed is ${formatAsUSD(data.totalAmount)}\n`;
-  result += `You earned ${totalVolumeCredits()} credits\n`;
+  result += `You earned ${data.totalVolumeCredits} credits\n`;
   return result;
 
   function formatAsUSD(number) {
@@ -82,16 +93,6 @@ function renderPlainText(data, plays) {
       style: "currency", currency: "USD",
       minimumFractionDigits: 2
     }).format(number / 100);
-  }
-
-  function totalVolumeCredits() {
-    let result = 0;
-
-    for (let perf of data.performances) {
-      result += perf.volumeCredits;
-    }
-
-    return result;
   }
 }
 
