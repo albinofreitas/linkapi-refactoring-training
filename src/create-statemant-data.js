@@ -25,27 +25,26 @@ module.exports = function createStatementData(invoice, plays) {
     return result;
   }
 
-  function totalVolumeCredits(data) {
-    let result = 0;
-
-    for (let perf of data.performances) {
-      result += perf.volumeCredits;
-    }
-
-    return result;
-  }
-
-  function totalAmount(data) {
-    let result = 0;
-
-    for (let perf of data.performances) {
-      result += perf.amount;
-    }
-
-    return result;
-  }
-
   function playFor(performance) {
     return plays[performance.playID];
   }
+}
+function totalVolumeCredits(data) {
+  let result = 0;
+
+  for (let perf of data.performances) {
+    result += perf.volumeCredits;
+  }
+
+  return result;
+}
+
+function totalAmount(data) {
+  let result = 0;
+
+  for (let perf of data.performances) {
+    result += perf.amount;
+  }
+
+  return result;
 }
