@@ -2,11 +2,7 @@ function statement(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
-  const format = new Intl.NumberFormat("en-US",
-    {
-      style: "currency", currency: "USD",
-      minimumFractionDigits: 2
-    }).format;
+
   for (let perf of invoice.performances) {
     // soma créditos por volume
     volumeCredits += Math.max(perf.audience - 30, 0);
@@ -45,6 +41,13 @@ function statement(invoice, plays) {
 
   function playFor(performance) {
     return plays[performance.playID];
+  }
+
+  function format(number) {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency", currency: "USD",
+      minimumFractionDigits: 2
+    }).format(number);
   }
 }
 
