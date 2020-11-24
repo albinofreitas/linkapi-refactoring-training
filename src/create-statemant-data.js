@@ -20,15 +20,7 @@ module.exports = function createStatementData(invoice, plays) {
     };
 
     result.amount = calculator.amount;
-    result.volumeCredits = volumeCreditsFor(result);
-
-    return result;
-  }
-
-  function volumeCreditsFor(performance) {
-    let result = Math.max(performance.audience - 30, 0);
-
-    if ("comedy" === performance.play.type) result += Math.floor(performance.audience / 5);
+    result.volumeCredits = calculator.volumeCredits;
 
     return result;
   }
