@@ -13,6 +13,15 @@ function statement(invoice, plays) {
     };
 
     result.amount = amountFor(result);
+    result.volumeCredits = volumeCreditsFor(result);
+
+    return result;
+  }
+
+  function volumeCreditsFor(performance) {
+    let result = Math.max(performance.audience - 30, 0);
+
+    if ("comedy" === performance.play.type) result += Math.floor(performance.audience / 5);
 
     return result;
   }
@@ -63,14 +72,6 @@ function renderPlainText(data, plays) {
     }).format(number / 100);
   }
 
-  function volumeCreditsFor(performance) {
-    let result = Math.max(performance.audience - 30, 0);
-
-    if ("comedy" === performance.play.type) result += Math.floor(performance.audience / 5);
-
-    return result;
-  }
-
   function totalAmount() {
     let result = 0;
 
@@ -85,7 +86,7 @@ function renderPlainText(data, plays) {
     let result = 0;
 
     for (let perf of data.performances) {
-      result += volumeCreditsFor(perf);
+      result += perf.volumeCredits;
     }
 
     return result;
