@@ -4,10 +4,8 @@ function statement(invoice, plays) {
   let result = `Statement for ${invoice.customer}\n`;
 
   for (let perf of invoice.performances) {
-    // soma créditos por volume
-    volumeCredits += Math.max(perf.audience - 30, 0);
-    // soma um crédito extra para cada dez espectadores de comédia
-    if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
+    volumeCredits += volumeCreditsFor(perf);
+
     // exibe a linha para esta requisição
     result += ` ${playFor(perf).name}: ${formatAsUSD(amountFor(perf))} (${perf.audience} seats)\n`;
     totalAmount += amountFor(perf);
@@ -48,6 +46,16 @@ function statement(invoice, plays) {
       style: "currency", currency: "USD",
       minimumFractionDigits: 2
     }).format(number / 100);
+  }
+
+  function volumeCreditsFor(performance) {
+    let volumeCredits = 0;
+    // soma créditos por volume
+    volumeCredits += Math.max(performance.audience - 30, 0);
+    // soma um crédito extra para cada dez espectadores de comédia
+    if ("comedy" === playFor(performance).type) volumeCredits += Math.floor(performance.audience / 5);
+
+    return volumeCredits;
   }
 }
 
