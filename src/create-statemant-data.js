@@ -29,22 +29,12 @@ module.exports = function createStatementData(invoice, plays) {
     return plays[performance.playID];
   }
 }
-function totalVolumeCredits(data) {
-  let result = 0;
-
-  for (let perf of data.performances) {
-    result += perf.volumeCredits;
-  }
-
-  return result;
+function totalAmount(data) {
+  return data.performances
+    .reduce((total, p) => total + p.amount, 0);
 }
 
-function totalAmount(data) {
-  let result = 0;
-
-  for (let perf of data.performances) {
-    result += perf.amount;
-  }
-
-  return result;
+function totalVolumeCredits(data) {
+  return data.performances
+    .reduce((total, p) => total + p.volumeCredits, 0);
 }
