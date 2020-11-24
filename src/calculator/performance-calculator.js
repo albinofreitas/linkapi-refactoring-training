@@ -11,11 +11,7 @@ class PerformanceCalculator {
       case "tragedy":
         throw 'not available';
       case "comedy":
-        result = 30000; if (this.performance.audience > 20) {
-          result += 10000 + 500 * (this.performance.audience - 20);
-        }
-        result += 300 * this.performance.audience;
-        break;
+        throw 'not available';
       default:
         throw new Error(`unknown type: ${this.play.type}`);
     }
