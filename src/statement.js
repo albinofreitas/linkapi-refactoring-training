@@ -87,13 +87,13 @@ function renderPlainText(data, plays) {
   result += `Amount owed is ${formatAsUSD(data.totalAmount)}\n`;
   result += `You earned ${data.totalVolumeCredits} credits\n`;
   return result;
+}
 
-  function formatAsUSD(number) {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency", currency: "USD",
-      minimumFractionDigits: 2
-    }).format(number / 100);
-  }
+function formatAsUSD(number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency", currency: "USD",
+    minimumFractionDigits: 2
+  }).format(number / 100);
 }
 
 module.exports = { statement };
