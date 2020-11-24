@@ -9,10 +9,10 @@ function statement(invoice, plays) {
     // soma um crédito extra para cada dez espectadores de comédia
     if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
     // exibe a linha para esta requisição
-    result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
+    result += ` ${playFor(perf).name}: ${formatAsUSD(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
     totalAmount += amountFor(perf);
   }
-  result += `Amount owed is ${format(totalAmount / 100)}\n`;
+  result += `Amount owed is ${formatAsUSD(totalAmount / 100)}\n`;
   result += `You earned ${volumeCredits} credits\n`;
   return result;
 
@@ -43,7 +43,7 @@ function statement(invoice, plays) {
     return plays[performance.playID];
   }
 
-  function format(number) {
+  function formatAsUSD(number) {
     return new Intl.NumberFormat("en-US", {
       style: "currency", currency: "USD",
       minimumFractionDigits: 2
