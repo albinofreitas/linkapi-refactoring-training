@@ -1,0 +1,80 @@
+- a versão inicial é tolerável por ser um sistema extremamente pequeno e não precisar de manutenção
+
+- mas agora precisamos adicionar uma nova funcionalidade para gerar o extrato em HTML. Então temos 3 opções:
+  - adicinar if's onde os textos são gerados
+  - duplicar o código para gerar o extrato em HTML
+  - utilizar da refatoração perparatória
+
+- porém os atores querem adicionar novos tipos de peças ao repertório, isso geraria muita complexidade da forma que está. Então vamos escolher refatorar
+
+1° passo - Decompor função
+  - "Extrair Função" - amountFor
+
+2° passo - Analisar função extraída para deixa-lá mais clara.
+  - usar convenção de retorno - result
+  - renomear parâmetro para deixar mais claro - perf => performance
+  - "Substituir variável temporária por consulta" - playFor, variável play é obitida através da performance (analisar tempo de execução dos testes)
+
+3° passo - Voltar a analisar a função principal
+  - "Internalizar Variável" - thisAmount, dado que ela nunca é manipulada
+  - "Extrair Função" - volumeCreditsFor (duas linhas)
+  - renomear parâmetro para deixar mais claro
+  - usar convenção de retorno - result
+  - remover comentários desnecessários e errados
+
+Next Removendo váriaveis temporárias
+
+4° passo - Removendo variável format
+  - "Extrair Função" - formatAsUSD
+  - "Mudar declaração de função" - format não diz o que a função faz de fato, então vamos usar - formatAsUSD
+
+5° passo - Removendo o total de crédito por volume
+  - "Dividir Laço" - como o calculo é feito dentro do for junto a outro calculo
+  - "Deslocar Instruções" - para deixar a declaração da variável próxima do uso
+  - "Extrair Função" - para calcular os créditos por volume
+  - "Internalizar Variável" - volumeCredits
+
+6° passo - Removendo váriavel totalAmount
+  - "Dividir Laço" - como o calculo é feito dentro do for junto a outro calculo
+  - "Deslocar Instruções" - para deixar a declaração da variável próxima do uso
+  - "Extrair Função" - para calcular os créditos por volume
+  - "Internalizar Variável" - totalAmount
+
+7° passo - Analisar o que foi feito e deixar mais claro
+  - Utilizar convenção result para variáveis de retorno
+
+8° passo - Analisar e entender melhor o código
+  - da forma que está seria muito mais simples adicionar a funcionalidade para gerar o extrato em html, já que separamos todos os calculos.
+Basicamente só precisariamos reescrever as 7 linhas da função statement.
+  - porem ainda temos alguns problemas, estas funções estão aninhadas
+
+9° passo - "Separar em Fases" para que consigamos utilizar as mesmas funções de calculo para html e plain text
+  - "Introduzir objeto de parâmetros" - usaremos um objeto intermediário entre as duas fases
+  - "Introduzir objeto de parâmetros" - removendo dependência de invoice
+  - "Mover Função" - levar função playFor para enriquecer a performance
+  - "Mover Função" - levar função amountFor para enriquecer a performance
+    - amountFor usa performance.play, então precisamos passar a performance enriquecida
+  - "Mover Função" - levar função volumeCredits para enriquecer a performance
+  - "Mover Função" - levar função totalVolumesCredits para statementData
+  - "Mover Função" - levar função totalAmount para statementData
+  - "Substituir Laço por Pipeline" - totalAmount
+  - "Substituir Laço por Pipeline" - totalVolumesCredits
+  - "Mover Função" - criar função específica para gerar statementData
+  - "Separar em Fases" - finanlmente podemos separar as fases em arquivos diferentes
+
+10° passo - Adicionar flexibilidade para aceitar outras peças
+  - atualmente teria de entrar nas funções de cálculo e editar ali as condições
+  - isso geraria complexidade e ficaria díficil de manter, por isso usaremos o polimosfismo
+  - "Substituir condicional por polimorfismo" - criar performance calculator
+  - "Mover função" - calcular amountFor na calculadora
+  - "Mover função" - calcular volumeCreditsFor na calculadora
+
+11° passo - "Substituir código de tipos por subclasses"
+  - "Substituir construtor por função de factory" - isso pq o js não permite o retorno de subclasses no construtor
+  - Criar calculadoras específicas para usar o polimorfismo
+  - "Mover Função" - calculo de amount em cada classe
+    - No can dosville baby doll!
+    - We were on a break!
+    - Poderiamos remover o método da superclasse, mas é uma boa prática deixar um erro mais específico
+  - Calculo de volumeCredits na subclasse
+    - porém existe uma regra geral que deve ser mantida na superclasse
